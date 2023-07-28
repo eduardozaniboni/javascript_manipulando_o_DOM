@@ -43,23 +43,37 @@ controle.forEach((elemento) => {
   elemento.addEventListener('click', (evento) => {
     // passa o conteudo do elemento clicado e também quem é o elemento "pai" dele
     manipulaDados(evento.target.dataset.controle, evento.target.parentNode);
-    atualizaEstatisticas(evento.target.dataset.peca);
+    atualizaEstatisticas(evento.target.dataset.controle, evento.target.dataset.peca, evento.target.parentNode);
   })
 })
 
 // função para manipular qual a operação que está sendo feita
 function manipulaDados(operacao, controle) {
-  const peca = controle.querySelector('[data-contador]')
+  const valorPeca = controle.querySelector('[data-contador]')
 
   if (operacao === '-') {
-    peca.value = parseInt(peca.value) - 1;
+    if (parseInt(valorPeca.value) > 0) {
+      valorPeca.value = parseInt(valorPeca.value) - 1;
+    }
+    return;
   } else {
-    peca.value = parseInt(peca.value) + 1;
+    valorPeca.value = parseInt(valorPeca.value) + 1;
   }
 }
 
-function atualizaEstatisticas(peca) {
+function atualizaEstatisticas(operacao, peca, controle) {
+  const valorPeca = controle.querySelector('[data-contador]')
+
   estatisticas.forEach((elemento) => {
-    elemento.textContent = parseInt(elemento.textContent) + pecas[peca][elemento.dataset.estatistica]
+    console.log(parseInt(valorPeca.value));
+    if (operacao === '-') {
+      if (parseInt(valorPeca.value) >= 0) {
+        elemento.textContent = parseInt(elemento.textContent) - pecas[peca][elemento.dataset.estatistica];
+      } else {
+        return;
+      }
+    } else {
+      elemento.textContent = parseInt(elemento.textContent) + pecas[peca][elemento.dataset.estatistica];
+    }
   })
 }
